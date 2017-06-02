@@ -1,0 +1,106 @@
+*{
+    padding: 0;
+    margin: 0;
+}
+
+body{
+    font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+    color: #595E66;
+}
+
+a{
+    color: #595E66;
+    text-decoration: none;
+}
+
+a:hover{
+    color: #F7952B;
+}
+
+.wrapper{
+    display: block;
+    width: 960px;
+    margin: 0 auto;
+}
+
+#icon{
+    margin: 50px auto 20px auto;
+    text-align: center;
+}
+
+h1{
+    font-size: 56px;
+    text-align: center;
+
+    font-weight: 200;
+}
+
+#h1_caption{
+    font-size: 18px;
+    margin-top: 5px;
+    text-align: center;
+    font-weight: 300;
+
+}
+#note{
+    font-size: 16px;
+    color: #92969C;
+    margin-bottom: 60px;
+
+}
+#support{
+    font-size: 12px;
+}
+#zoc{
+    font-size: 12px;
+    padding-top: 12px;
+    border-top: 1px solid #eee;
+}
+
+.dropzone{
+    width: 90%;
+    max-width: 1200px;
+    height: 200px;
+    position: relative;
+    background: #FFFCF2;
+    border: 4px dashed #FAA428;
+    margin: 60px auto 80px auto;
+    color: #FAA428;
+}
+
+.dropzone:hover{
+    background: #FFFEF6;
+    border: 4px solid #FAA428;
+    color: #FF8500;
+}
+
+.dropzone #dropzone_title{
+    width:auto;
+    text-align: center;
+    margin: 0 auto;
+    padding-top: 80px;
+    font-size: 32px;
+    font-weight: bold;
+}
+
+.dropzone input{
+    background: red;
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.0;
+}
+
+.bottom{
+    width: 760px;
+}
+
+.bottom p{
+    margin-top: 12px;
+    text-align: center;
+}
