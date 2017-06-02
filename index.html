@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>HTML PAGE</title>
+    <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.js"></script>
+    <script src="https://cdn.bootcss.com/jszip/3.1.3/jszip.min.js"></script>
+    <script src="https://cdn.bootcss.com/FileSaver.js/2014-11-29/FileSaver.min.js"></script>
+
+    <style type="text/css">
+    .dropzone{
+        width: 90%;
+        max-width: 800px;
+        height: 200px;
+        position: relative;
+        background: #eee;
+        border: 1px dashed #999;
+    }
+    .dropzone #dropzone_title{
+        width:auto;
+        text-align: center;
+        margin: 0 auto;
+        padding-top:90px;
+        font-size: 21px;
+    }
+    .dropzone input{
+        background: red;
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0.0;
+    }
+    </style>
+</head>
+
+<body onLoad="init()">
+    <h1>Sketch 文件降级打开工具</h1>
+    <p id="h1_caption">让Sketch 43 可以打开 44 版本生成的文件</p>
+    <p id="note">注意：此工具只为帮助 Sketch 许可证停留在 43，却急需打开 44 版本保存文件的人暂时访问文件，请尽快更新您的 Sketch 许可证以正常打开、编辑 .sketch 文件</p>
+    <div class="dropzone">
+        <div id="dropzone_title">把版本44保存的 .sketch 文件拖到这里</div>
+        <input id="filedrop" type="file" onchange="go()">
+    </div>
+    <div id="support">如有疑问请联系Freeman Sun</div>
+    <div id="zoc">Created at ZOC·D</div>
+
+<script type="text/javascript">
+//This tool was created only for people whose Sketch License is ended within 43 but have to open a 44 document on short notice. Please renew your Sketch license as soon as possible.
+var disclaimerShowed = false;
+var str_h1 = "Sketch 文件降级打开工具";
+var str_h1_caption = "让 Sketch 43 可以打开 44 版本生成的 .sketch 文件";
+var str_note = "注意：此工具只为帮助 Sketch 许可证停留在 43，却急需打开 44 版本文件的人暂时访问文件，请尽快<a href='https://www.sketchapp.com'>更新您的 Sketch 许可证</a>以正常打开、编辑 .sketch 文件";
+var str_dropzone_before = "把版本44保存的 .sketch 文件拖到这里";
+var str_dropzone_after = "处理过的 Sketch 已下载，可继续拖入其他 .sketch 处理";
+var str_support = "如有疑问请联系<a href=‘mailto:freeman990@qq.com’>Freeman Sun</a>";
+var str_zoc = "Created at <a href='http://www.zocdesign.net'>ZOC·D</a> | 此页源文件";
+
+function init(){
+    $("h1").html(str_h1);
+    $("#h1_caption").html(str_h1_caption);
+    $("#note").html(str_note);
+    $("#dropzone_title").html(str_dropzone_before);
+    $("#support").html(str_support);
+    $("#zoc").html(str_zoc);
+}
+
+function go(){
+var file = document.getElementById("filedrop").files[0];
+var reader = new FileReader();
+var js_zip = new JSZip();
+
+reader.onload = function(e){
+    var data = e.target.result;
+
+    //=============== ZIP START ================
+    js_zip.loadAsync(data).then(function (zip) {
+        zip.forEach(function(relativePath, zipEntry){
+            if(relativePath == "meta.json"){
+                zipEntry.async('string').then(function success (content) {
+                    var meta = JSON.parse(content)
+                    //=============== HANDLE DOWNGRADE START ===============
+                    meta.appVersion = "43.1";
+                    meta.build = 39012;
+                    meta.created.appVersion = "43.1";
+                    meta.created.build = 39012;
+                    meta.version = 88;
+
+                    var writeContent = JSON.stringify(meta);
+                    var writeFileName = file.name.replace(".sketch","_43可读.sketch");
+
+                    if(!disclaimerShowed){
+                        if(confirm("请再次注意这些 Sketch 文件仅供暂时查看使用，请更新您的 Sketch 许可证正常打开、编辑Sketch文档。单击确定以获得转换过的文件")){
+                            getZipFile(zip, writeContent, writeFileName);
+                            disclaimerShowed = true;
+                        }
+                    }else{
+                        getZipFile(zip, writeContent, writeFileName);
+                    }
+
+
+                    //=============== HANDLE DOWNGRADE START END ===============
+                })
+            }
+        })
+    })
+    //=============== ZIP END ================
+}
+//Reader The dropped file
+reader.readAsArrayBuffer(file)
+}
+
+function getZipFile(jszip, content, fileName){
+    jszip.file("meta.json", content);
+    jszip.generateAsync({type:"blob"}).then(function (blob) {
+        saveAs(blob, fileName);
+    });
+
+    $("#dropzone_title").html(str_dropzone_after);
+}
+</script>
+</body>
+
+</html>
